@@ -1,11 +1,10 @@
-<!DOCTYPE html>
+updateBell(); if(Notification.permission==='granted') startNotifChecker();<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>TIME MANAGEMENT D.C</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet"/>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 <!-- ═══════════════════════════════════════════
      GOOGLE ADSENSE — Replace ca-pub-XXXXXXXXXXXXXXXX
      with your Publisher ID from adsense.google.com
@@ -145,6 +144,35 @@
     font-size:12px; display:none;
   }
 
+  /* ══ SAVED ACCOUNTS ══ */
+  .saved-accounts { width:100%; margin-bottom:4px; }
+  .saved-accounts-label {
+    font-family:var(--font-mono); font-size:10px; color:var(--muted);
+    letter-spacing:2px; text-transform:uppercase; margin-bottom:8px;
+  }
+  .saved-account-list { display:flex; flex-direction:column; gap:6px; }
+  .saved-account-chip {
+    display:flex; align-items:center; gap:10px;
+    background:rgba(77,166,255,0.06); border:1px solid rgba(77,166,255,0.2);
+    border-radius:10px; padding:10px 14px; cursor:pointer;
+    transition:all 0.18s; width:100%;
+  }
+  .saved-account-chip:hover { background:rgba(77,166,255,0.14); border-color:rgba(77,166,255,0.45); }
+  .saved-account-chip:active { background:rgba(77,166,255,0.22); transform:scale(0.98); }
+  .saved-account-avatar {
+    width:32px; height:32px; border-radius:50%;
+    background:linear-gradient(135deg,#4da6ff,#2979d4);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-mono); font-size:13px; font-weight:700; color:#fff; flex-shrink:0;
+  }
+  .saved-account-info { flex:1; text-align:left; }
+  .saved-account-name { font-size:14px; font-weight:600; color:var(--text); }
+  .saved-account-user { font-size:11px; color:var(--muted); font-family:var(--font-mono); }
+  .saved-account-remove {
+    background:none; border:none; color:var(--muted); cursor:pointer;
+    font-size:15px; padding:2px 6px; border-radius:6px; transition:color 0.15s; line-height:1;
+  }
+  .saved-account-remove:hover { color:var(--accent3); }
   .auth-divider {
     display:flex; align-items:center; gap:12px; margin:4px 0;
   }
@@ -154,30 +182,6 @@
   .auth-divider span {
     font-size:10px; color:var(--muted);
     font-family:var(--font-mono); letter-spacing:2px;
-  }
-
-  .google-btn {
-    width:100%; padding:13px 16px;
-    background:#fff; color:#1f1f1f;
-    border:none; border-radius:10px;
-    font-family:var(--font-body); font-size:14px; font-weight:600;
-    cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px;
-    transition:transform 0.15s, box-shadow 0.15s;
-    box-shadow:0 2px 8px rgba(0,0,0,0.3);
-  }
-  .google-btn:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(255,255,255,0.15); }
-
-  .setup-notice {
-    background:rgba(71,200,255,0.08); border:1px solid rgba(71,200,255,0.25);
-    border-radius:10px; padding:14px; margin-top:8px; display:none;
-  }
-  .setup-notice p { font-size:12px; color:var(--accent2); line-height:1.6; }
-  .setup-notice code {
-    background:rgba(71,200,255,0.15); border-radius:4px; padding:1px 5px;
-    font-family:var(--font-mono); font-size:11px;
-  }
-  .setup-notice .close-notice {
-    float:right; background:none; border:none; color:var(--muted); cursor:pointer; font-size:16px;
   }
 
   /* ══ HEADER ══ */
@@ -649,62 +653,57 @@
     font-family:var(--font-mono); font-size:8px; color:rgba(77,166,255,0.3);
     letter-spacing:2px; text-transform:uppercase; pointer-events:none;
   }
-  /* ══ CHESS ══ */
-  .chess-layout { display:grid; grid-template-columns:auto 220px; gap:20px; align-items:start; }
-  .chess-header { margin-bottom:10px; }
-  .chess-title { font-family:var(--font-head); font-size:26px; font-weight:700; color:var(--accent); letter-spacing:2px; margin-bottom:8px; }
-  .chess-status-bar { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
-  #chess-status { font-size:13px; color:var(--muted); font-family:var(--font-mono); }
-  .chess-ctrl-btn {
-    padding:7px 14px; border:1px solid var(--border); border-radius:8px;
-    background:rgba(77,166,255,0.08); color:var(--accent); font-size:12px; font-weight:600;
-    cursor:pointer; font-family:var(--font-body); transition:all 0.2s;
+  /* ══ CALCULATOR ══ */
+  .calc-wrapper {
+    display:flex; align-items:flex-start; justify-content:center; padding:20px 0;
   }
-  .chess-ctrl-btn:hover { background:rgba(77,166,255,0.18); }
-  .chess-captured { font-size:12px; color:var(--muted); margin:6px 0; font-family:var(--font-mono); min-height:20px; letter-spacing:1px; }
-  .chessboard {
-    display:grid; grid-template-columns:repeat(8,1fr);
-    border:2px solid rgba(77,166,255,0.3); border-radius:6px; overflow:hidden;
-    width:min(440px,90vw); aspect-ratio:1;
-    box-shadow:0 8px 32px rgba(0,0,0,0.5);
+  .calc-card {
+    background:var(--card); border:1px solid var(--border); border-radius:20px;
+    padding:24px; backdrop-filter:blur(12px); width:340px; max-width:96vw;
+    box-shadow:0 12px 40px rgba(0,0,0,0.5);
   }
-  .sq {
-    aspect-ratio:1; display:flex; align-items:center; justify-content:center;
-    font-size:clamp(22px,4.5vw,34px); cursor:pointer; position:relative;
-    transition:background 0.15s; user-select:none;
-    -webkit-text-stroke: 1.5px #1a1a2e;
-    paint-order: stroke fill;
-    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.7));
+  .calc-display-wrap {
+    background:rgba(0,0,0,0.3); border-radius:14px; padding:18px 20px 14px;
+    margin-bottom:20px; min-height:88px; display:flex; flex-direction:column;
+    align-items:flex-end; justify-content:flex-end; gap:4px;
+    border:1px solid rgba(77,166,255,0.12);
   }
-  .sq.dark {
-    -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+  .calc-expr {
+    font-family:var(--font-mono); font-size:13px; color:var(--muted);
+    min-height:18px; word-break:break-all; text-align:right;
   }
-  .sq.light { background:#d4e8ff; }
-  .sq.dark  { background:#2a4a7a; -webkit-text-stroke:1px rgba(200,220,255,0.4); }
-  .sq.selected { background:#ffd700 !important; }
-  .sq.valid-move::after {
-    content:''; position:absolute; width:32%; height:32%; border-radius:50%;
-    background:rgba(77,255,120,0.55); pointer-events:none;
+  .calc-display {
+    font-family:var(--font-mono); font-size:42px; font-weight:600;
+    color:var(--text); letter-spacing:1px; word-break:break-all; text-align:right;
+    line-height:1.1; transition:font-size 0.1s;
   }
-  .sq.valid-capture { box-shadow:inset 0 0 0 3px rgba(255,100,100,0.7); }
-  .sq.last-move { background:rgba(255,215,0,0.22) !important; }
-  .sq.in-check { background:#ff4444 !important; }
-  .sq:hover:not(.selected) { filter:brightness(1.12); }
-  .chess-right { display:flex; flex-direction:column; gap:12px; }
-  .chess-info-card {
-    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
-    padding:14px 16px; backdrop-filter:blur(10px);
+  .calc-grid {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:10px;
   }
-  .chess-info-card h3 { font-family:var(--font-mono); font-size:10px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; }
-  .chess-info-card p { font-size:12px; color:var(--muted); line-height:1.6; }
-  .chess-moves { font-family:var(--font-mono); font-size:11px; color:var(--muted); max-height:140px; overflow-y:auto; line-height:2; }
-  .diff-btns { display:flex; gap:6px; }
-  .diff-btn {
-    flex:1; padding:7px; border:1px solid var(--border); border-radius:8px;
-    background:transparent; color:var(--muted); font-size:11px; font-weight:600;
-    cursor:pointer; font-family:var(--font-body); transition:all 0.2s;
+  .calc-btn {
+    padding:18px 10px; border:none; border-radius:12px; font-size:18px;
+    font-weight:600; cursor:pointer; transition:all 0.12s;
+    font-family:var(--font-body); background:rgba(255,255,255,0.07);
+    color:var(--text); border:1px solid rgba(255,255,255,0.06);
+    user-select:none; -webkit-tap-highlight-color:transparent;
   }
-  .diff-btn.active { background:rgba(77,166,255,0.15); border-color:var(--accent); color:var(--accent); }
+  .calc-btn:hover { background:rgba(255,255,255,0.13); transform:translateY(-1px); }
+  .calc-btn:active { transform:scale(0.93); background:rgba(255,255,255,0.2); }
+  .calc-btn.calc-op {
+    background:rgba(77,166,255,0.13); color:var(--accent);
+    border-color:rgba(77,166,255,0.2);
+  }
+  .calc-btn.calc-op:hover { background:rgba(77,166,255,0.22); }
+  .calc-btn.calc-fn {
+    background:rgba(255,255,255,0.11); color:var(--muted);
+  }
+  .calc-btn.calc-fn:hover { color:var(--text); background:rgba(255,255,255,0.18); }
+  .calc-btn.calc-eq {
+    background:linear-gradient(135deg,#4da6ff,#2979d4); color:#fff;
+    border-color:transparent; box-shadow:0 4px 16px rgba(77,166,255,0.35);
+  }
+  .calc-btn.calc-eq:hover { box-shadow:0 6px 22px rgba(77,166,255,0.5); transform:translateY(-2px); }
+  .calc-btn.span2 { grid-column:span 2; }
 
   /* ══ FOCUS MODE CARD ══ */
   .focus-mode-card {
@@ -841,26 +840,12 @@
       <p>Organize · Schedule · Achieve</p>
     </div>
 
-    <button class="google-btn" onclick="handleGoogleSignIn()">
-      <svg width="18" height="18" viewBox="0 0 48 48">
-        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-        <path fill="none" d="M0 0h48v48H0z"/>
-      </svg>
-      Continue with Google
-    </button>
-
-    <div class="setup-notice" id="setup-notice">
-      <button class="close-notice" onclick="$('setup-notice').style.display='none'">×</button>
-      <p>
-        <strong>⚙️ Setup Required</strong><br/>
-        Go to <code>console.cloud.google.com</code> → Create OAuth 2.0 Client ID → replace <code>YOUR_GOOGLE_CLIENT_ID</code> in script.
-      </p>
+    <!-- Saved Accounts -->
+    <div class="saved-accounts" id="saved-accounts-section" style="display:none">
+      <div class="saved-accounts-label">Saved Accounts</div>
+      <div class="saved-account-list" id="saved-account-list"></div>
+      <div class="auth-divider" style="margin-top:12px"><span>or sign in manually</span></div>
     </div>
-
-    <div class="auth-divider"><span>or</span></div>
 
     <div class="tab-row">
       <button class="tab-btn active" onclick="switchTab('signin')">Sign In</button>
@@ -887,7 +872,10 @@
       </div>
       <div>
         <div class="field-label">Username</div>
-        <div class="field-wrap"><input type="text" id="su-user" placeholder="Choose a username"/></div>
+        <div class="field-wrap" style="position:relative">
+          <input type="text" id="su-user" placeholder="Choose a username" oninput="checkUsernameAvail()" autocomplete="off"/>
+          <span id="su-user-status" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;font-family:var(--font-mono);font-weight:600;pointer-events:none;"></span>
+        </div>
       </div>
       <div>
         <div class="field-label">Password</div>
@@ -917,7 +905,12 @@
   <nav class="app-nav">
     <button class="nav-tab active" id="tab-tasks" onclick="switchView('tasks')">📋 Tasks</button>
     <button class="nav-tab" id="tab-calendar" onclick="switchView('calendar')">📅 Calendar</button>
-    <button class="nav-tab" id="tab-chess" onclick="switchView('chess')">♟ Chess</button>
+    <button class="nav-tab" id="tab-calc" onclick="switchView('calc')">🧮 Calc</button>
+    <button id="notif-bell" onclick="requestNotifPermission()" title="Enable notifications"
+      style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:20px;
+      padding:6px 10px;border-radius:8px;transition:background 0.15s;color:var(--muted);"
+      onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+      onmouseout="this.style.background='none'">🔔</button>
     <button class="nav-tab" id="tab-timer" onclick="switchView('timer')">⏱ Timer</button>
   </nav>
 
@@ -1063,44 +1056,35 @@
         </div>
       </div>
 
-      <!-- CHESS VIEW -->
-      <div class="view" id="view-chess">
-        <div class="chess-layout">
-          <div class="chess-left">
-            <div class="chess-header">
-              <h2 class="chess-title">♟ Chess vs AI</h2>
-              <div class="chess-status-bar">
-                <span id="chess-status">White's turn — your move</span>
-                <button class="chess-ctrl-btn" onclick="resetChess()">↺ New Game</button>
-              </div>
+      <!-- CALCULATOR VIEW -->
+      <div class="view" id="view-calc">
+        <div class="calc-wrapper">
+          <div class="calc-card">
+            <div class="calc-display-wrap">
+              <div class="calc-expr" id="calc-expr"></div>
+              <div class="calc-display" id="calc-display">0</div>
             </div>
-            <div class="chess-captured" id="chess-cap-black">♟ Captured: <span id="cap-black"></span></div>
-            <div class="chessboard" id="chessboard"></div>
-            <div class="chess-captured" id="chess-cap-white">♙ Captured: <span id="cap-white"></span></div>
-          </div>
-          <div class="chess-right">
-            <div class="chess-info-card">
-              <h3>Play As</h3>
-              <div class="diff-btns">
-                <button class="diff-btn active" id="color-white" onclick="setPlayerColor('white',this)">♔ White</button>
-                <button class="diff-btn" id="color-black" onclick="setPlayerColor('black',this)">♚ Black</button>
-              </div>
-            </div>
-            <div class="chess-info-card">
-              <h3>How to Play</h3>
-              <p id="how-to-play-text">Click a piece to select it, then click a highlighted square to move. You play as <strong>White</strong>, the AI plays as <strong>Black</strong>.</p>
-            </div>
-            <div class="chess-info-card">
-              <h3>Move History</h3>
-              <div class="chess-moves" id="chess-moves"></div>
-            </div>
-            <div class="chess-info-card">
-              <h3>Difficulty</h3>
-              <div class="diff-btns">
-                <button class="diff-btn active" id="diff-easy" onclick="setDiff('easy',this)">Easy</button>
-                <button class="diff-btn" id="diff-medium" onclick="setDiff('medium',this)">Medium</button>
-                <button class="diff-btn" id="diff-hard" onclick="setDiff('hard',this)">Hard</button>
-              </div>
+            <div class="calc-grid">
+              <button class="calc-btn calc-op" onclick="calcOp('÷')">÷</button>
+              <button class="calc-btn calc-fn" onclick="calcClear()">AC</button>
+              <button class="calc-btn calc-fn" onclick="calcToggleSign()">+/−</button>
+              <button class="calc-btn calc-fn" onclick="calcBackspace()">⌫</button>
+              <button class="calc-btn calc-op" onclick="calcOp('×')">×</button>
+              <button class="calc-btn" onclick="calcNum('7')">7</button>
+              <button class="calc-btn" onclick="calcNum('8')">8</button>
+              <button class="calc-btn" onclick="calcNum('9')">9</button>
+              <button class="calc-btn calc-op" onclick="calcOp('−')">−</button>
+              <button class="calc-btn" onclick="calcNum('4')">4</button>
+              <button class="calc-btn" onclick="calcNum('5')">5</button>
+              <button class="calc-btn" onclick="calcNum('6')">6</button>
+              <button class="calc-btn calc-op" onclick="calcOp('+')">+</button>
+              <button class="calc-btn" onclick="calcNum('1')">1</button>
+              <button class="calc-btn" onclick="calcNum('2')">2</button>
+              <button class="calc-btn" onclick="calcNum('3')">3</button>
+              <button class="calc-btn calc-op" onclick="calcOp('%')">%</button>
+              <button class="calc-btn" onclick="calcNum('0')">0</button>
+              <button class="calc-btn" onclick="calcDot()">.</button>
+              <button class="calc-btn calc-eq" onclick="calcEquals()">=</button>
             </div>
           </div>
         </div>
@@ -1322,7 +1306,7 @@
 <div class="toast-wrap"><div class="toast" id="toast"></div></div>
 
 <script>
-const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID';
+// Auth — no Google, local accounts only
 
 // ── STATE ──
 let currentUser = null;
@@ -1355,234 +1339,111 @@ function switchView(v) {
   $('view-'+v).classList.add('active');
   $('tab-'+v).classList.add('active');
   if(v==='calendar') renderCalendar();
-  if(v==='chess') { if(!chessInitDone) initChess(); }
 }
 
 // ══════════════════════════════════════
-//  CHESS ENGINE
+//  CALCULATOR
 // ══════════════════════════════════════
-let chessInitDone=false, chessBoard=[], chessSelected=null, chessTurn='w', chessLastMove=null;
-let capWhite=[], capBlack=[], chessMoves=[], chessDiff='easy', chessGameOver=false, playerColor='white';
+let calcVal = '0', calcPrev = '', calcOper = '', calcReset = false;
 
-function setPlayerColor(col, btn) {
-  playerColor = col;
-  document.querySelectorAll('#color-white,#color-black').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  // Update How to Play text
-  const howTo = $('how-to-play-text');
-  if(col === 'black'){
-    howTo.innerHTML = 'Click a piece to select it, then click a highlighted square to move. You play as <strong style="color:#1a1a2e;background:#cce4ff;padding:1px 5px;border-radius:4px;">♚ Black</strong>, the AI plays as <strong style="color:#1a1a2e;background:#fff;padding:1px 5px;border-radius:4px;border:1px solid #aaa;">♔ White</strong>. The board flips so your pieces are at the bottom!';
-  } else {
-    howTo.innerHTML = 'Click a piece to select it, then click a highlighted square to move. You play as <strong style="color:#1a1a2e;background:#fff;padding:1px 5px;border-radius:4px;border:1px solid #aaa;">♔ White</strong>, the AI plays as <strong style="color:#1a1a2e;background:#cce4ff;padding:1px 5px;border-radius:4px;">♚ Black</strong>.';
+function calcUpdateDisplay(val) {
+  const d = $('calc-display');
+  const s = String(val);
+  d.style.fontSize = s.length > 12 ? '24px' : s.length > 9 ? '32px' : '42px';
+  d.textContent = s;
+}
+function calcNum(n) {
+  if (calcReset) { calcVal = n; calcReset = false; }
+  else calcVal = calcVal === '0' ? n : calcVal + n;
+  calcUpdateDisplay(calcVal);
+}
+function calcDot() {
+  if (calcReset) { calcVal = '0.'; calcReset = false; }
+  else if (!calcVal.includes('.')) calcVal += '.';
+  calcUpdateDisplay(calcVal);
+}
+function calcOp(op) {
+  if (calcOper && !calcReset) calcDoMath();
+  calcPrev = calcVal; calcOper = op; calcReset = true;
+  $('calc-expr').textContent = calcVal + ' ' + op;
+}
+function calcDoMath() {
+  const a = parseFloat(calcPrev), b = parseFloat(calcVal);
+  let r;
+  if (calcOper === '+') r = a + b;
+  else if (calcOper === '−') r = a - b;
+  else if (calcOper === '×') r = a * b;
+  else if (calcOper === '÷') r = b === 0 ? 'Error' : a / b;
+  else if (calcOper === '%') r = a % b;
+  else r = b;
+  // Trim float noise
+  if (typeof r === 'number') r = parseFloat(r.toPrecision(12));
+  calcVal = String(r);
+}
+function calcEquals() {
+  if (!calcOper) return;
+  $('calc-expr').textContent = calcPrev + ' ' + calcOper + ' ' + calcVal + ' =';
+  calcDoMath();
+  calcOper = ''; calcReset = true;
+  calcUpdateDisplay(calcVal);
+}
+function calcClear() {
+  calcVal = '0'; calcPrev = ''; calcOper = ''; calcReset = false;
+  $('calc-display').textContent = '0'; $('calc-expr').textContent = '';
+  $('calc-display').style.fontSize = '42px';
+}
+function calcToggleSign() {
+  calcVal = String(parseFloat(calcVal) * -1);
+  calcUpdateDisplay(calcVal);
+}
+function calcBackspace() {
+  if (calcReset) return;
+  calcVal = calcVal.length > 1 ? calcVal.slice(0, -1) : '0';
+  calcUpdateDisplay(calcVal);
+}
+// Keyboard support for calculator
+document.addEventListener('keydown', e => {
+  if ($('app-screen').classList.contains('active') && $('view-calc').classList.contains('active')) {
+    if (e.key >= '0' && e.key <= '9') calcNum(e.key);
+    else if (e.key === '.') calcDot();
+    else if (e.key === '+') calcOp('+');
+    else if (e.key === '-') calcOp('−');
+    else if (e.key === '*') calcOp('×');
+    else if (e.key === '/') { e.preventDefault(); calcOp('÷'); }
+    else if (e.key === '%') calcOp('%');
+    else if (e.key === 'Enter' || e.key === '=') calcEquals();
+    else if (e.key === 'Backspace') calcBackspace();
+    else if (e.key === 'Escape') calcClear();
   }
-  // Restart with new color
-  chessInitDone = false; initChess();
+});
+
+
+// ══════════════════════════════════════
+//  TIMER SOUNDS (Web Audio API)
+// ══════════════════════════════════════
+function playBeep(type='done') {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const patterns = {
+      done: [{f:880,d:0.12},{f:1100,d:0.12},{f:1320,d:0.22}],
+      tick: [{f:1000,d:0.05}],
+      lap:  [{f:660,d:0.08},{f:880,d:0.1}],
+    };
+    const seq = patterns[type] || patterns.done;
+    let t = ctx.currentTime;
+    seq.forEach(({f,d}) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value = f; osc.type = 'sine';
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.4, t + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + d);
+      osc.start(t); osc.stop(t + d);
+      t += d + 0.04;
+    });
+  } catch(e) {}
 }
-
-const PIECES={
-  'wK':'♔','wQ':'♕','wR':'♖','wB':'♗','wN':'♘','wP':'♙',
-  'bK':'♚','bQ':'♛','bR':'♜','bB':'♝','bN':'♞','bP':'♟'
-};
-
-function initChess(){
-  chessInitDone=true;
-  chessBoard=[
-    ['bR','bN','bB','bQ','bK','bB','bN','bR'],
-    ['bP','bP','bP','bP','bP','bP','bP','bP'],
-    [null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null],
-    ['wP','wP','wP','wP','wP','wP','wP','wP'],
-    ['wR','wN','wB','wQ','wK','wB','wN','wR']
-  ];
-  chessTurn='w'; chessSelected=null; chessLastMove=null;
-  capWhite=[]; capBlack=[]; chessMoves=[]; chessGameOver=false;
-  renderChess();
-  if(playerColor==='white'){
-    $('chess-status').textContent="White's turn — your move";
-  } else {
-    $('chess-status').textContent='AI is thinking…';
-    setTimeout(aiMove, 600);
-  }
-  $('cap-white').textContent=''; $('cap-black').textContent='';
-  $('chess-moves').textContent='';
-}
-
-function resetChess(){ chessInitDone=false; initChess(); }
-function setDiff(d,btn){ chessDiff=d; document.querySelectorAll('.diff-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
-
-function renderChess(){
-  const board=$('chessboard'); board.innerHTML='';
-  const flip = playerColor === 'black';
-  for(let ri=0;ri<8;ri++){
-    for(let ci=0;ci<8;ci++){
-      // Flip ranks and files when playing as black
-      const r = flip ? 7-ri : ri;
-      const c = flip ? 7-ci : ci;
-      const sq=document.createElement('div');
-      sq.className='sq '+((r+c)%2===0?'light':'dark');
-      const p=chessBoard[r][c];
-      if(p) sq.textContent=PIECES[p]||'';
-      if(chessSelected&&chessSelected[0]===r&&chessSelected[1]===c) sq.classList.add('selected');
-      if(chessLastMove&&((chessLastMove.fr===r&&chessLastMove.fc===c)||(chessLastMove.tr===r&&chessLastMove.tc===c))) sq.classList.add('last-move');
-      if(chessSelected){
-        const moves=getValidMoves(chessSelected[0],chessSelected[1]);
-        if(moves.some(m=>m[0]===r&&m[1]===c)){
-          if(chessBoard[r][c]) sq.classList.add('valid-capture');
-          else sq.classList.add('valid-move');
-        }
-      }
-      if(p&&p==='wK'&&chessTurn==='w'&&isInCheck('w')) sq.classList.add('in-check');
-      if(p&&p==='bK'&&chessTurn==='b'&&isInCheck('b')) sq.classList.add('in-check');
-      sq.onclick=()=>handleSquareClick(r,c);
-      board.appendChild(sq);
-    }
-  }
-}
-
-function handleSquareClick(r,c){
-  const playerSide = playerColor==='white'?'w':'b';
-  const aiSide = playerColor==='white'?'b':'w';
-  if(chessGameOver||chessTurn!==playerSide) return;
-  const p=chessBoard[r][c];
-  if(chessSelected){
-    const moves=getValidMoves(chessSelected[0],chessSelected[1]);
-    if(moves.some(m=>m[0]===r&&m[1]===c)){
-      makeMove(chessSelected[0],chessSelected[1],r,c,playerSide);
-      chessSelected=null;
-      if(!chessGameOver){ chessTurn=aiSide; $('chess-status').textContent='AI is thinking…'; renderChess(); setTimeout(aiMove,400); }
-    } else if(p&&p[0]===playerSide){ chessSelected=[r,c]; renderChess(); }
-    else { chessSelected=null; renderChess(); }
-  } else {
-    if(p&&p[0]===playerSide){ chessSelected=[r,c]; renderChess(); }
-  }
-}
-
-function makeMove(fr,fc,tr,tc,side){
-  const piece=chessBoard[fr][fc];
-  const target=chessBoard[tr][tc];
-  if(target){ if(side==='w') capBlack.push(target); else capWhite.push(target); }
-  chessBoard[tr][tc]=piece; chessBoard[fr][fc]=null;
-  chessLastMove={fr,fc,tr,tc};
-  if(piece==='wP'&&tr===0) chessBoard[tr][tc]='wQ';
-  if(piece==='bP'&&tr===7) chessBoard[tr][tc]='bQ';
-  const cols='abcdefgh', rows='87654321';
-  chessMoves.push((side==='w'?'⬜':'⬛')+' '+(PIECES[piece]||'')+(cols[fc]+rows[fr])+'-'+(cols[tc]+rows[tr])+(target?'x':''));
-  $('chess-moves').innerHTML=chessMoves.slice(-20).map(m=>`<div>${m}</div>`).join('');
-  $('chess-moves').scrollTop=$('chess-moves').scrollHeight;
-  $('cap-white').textContent=capWhite.map(p=>PIECES[p]).join(' ');
-  $('cap-black').textContent=capBlack.map(p=>PIECES[p]).join(' ');
-  const opp=side==='w'?'b':'w';
-  if(isCheckmate(opp)){ chessGameOver=true; $('chess-status').textContent=side==='w'?'🎉 You win! Checkmate!':'😞 AI wins! Checkmate!'; renderChess(); return; }
-  if(isStalemate(opp)){ chessGameOver=true; $('chess-status').textContent='🤝 Stalemate — Draw!'; renderChess(); return; }
-  const playerSide = playerColor==='white'?'w':'b';
-  if(side!==playerSide) $('chess-status').textContent= playerColor==='white'?"Your move (White)":"Your move (Black)";
-}
-
-function aiMove(){
-  const aiSide = playerColor==='white'?'b':'w';
-  const playerSide = playerColor==='white'?'w':'b';
-  const moves=getAllMoves(aiSide);
-  if(!moves.length){ chessTurn=playerSide; return; }
-  let chosen;
-  if(chessDiff==='easy'){
-    chosen=moves[Math.floor(Math.random()*moves.length)];
-  } else if(chessDiff==='medium'){
-    const caps=moves.filter(m=>chessBoard[m[2]][m[3]]);
-    chosen=caps.length?caps[Math.floor(Math.random()*caps.length)]:moves[Math.floor(Math.random()*moves.length)];
-  } else {
-    chosen=minimaxRoot(2);
-  }
-  if(chosen) makeMove(chosen[0],chosen[1],chosen[2],chosen[3],aiSide);
-  chessTurn=playerSide; renderChess();
-  if(!chessGameOver) $('chess-status').textContent= playerColor==='white'?'Your move (White)':'Your move (Black)';
-}
-
-function minimaxRoot(depth){
-  const moves=getAllMoves('b'); let best=null, bestVal=-Infinity;
-  for(const m of moves){
-    const save=JSON.parse(JSON.stringify(chessBoard));
-    makeMoveSim(m[0],m[1],m[2],m[3]);
-    const val=minimax(depth-1,false,-Infinity,Infinity);
-    chessBoard=save;
-    if(val>bestVal){ bestVal=val; best=m; }
-  }
-  return best;
-}
-function minimax(depth,isMax,alpha,beta){
-  if(depth===0) return evalBoard();
-  const side=isMax?'w':'b', moves=getAllMoves(side);
-  if(!moves.length) return isMax?-9999:9999;
-  let best=isMax?-Infinity:Infinity;
-  for(const m of moves){
-    const save=JSON.parse(JSON.stringify(chessBoard));
-    makeMoveSim(m[0],m[1],m[2],m[3]);
-    const val=minimax(depth-1,!isMax,alpha,beta);
-    chessBoard=save;
-    if(isMax){ best=Math.max(best,val); alpha=Math.max(alpha,val); }
-    else { best=Math.min(best,val); beta=Math.min(beta,val); }
-    if(beta<=alpha) break;
-  }
-  return best;
-}
-function makeMoveSim(fr,fc,tr,tc){ chessBoard[tr][tc]=chessBoard[fr][fc]; chessBoard[fr][fc]=null; }
-const PVALS={P:1,N:3,B:3,R:5,Q:9,K:0};
-function evalBoard(){
-  let s=0;
-  for(let r=0;r<8;r++) for(let c=0;c<8;c++){
-    const p=chessBoard[r][c]; if(!p) continue;
-    const v=PVALS[p[1]]||0;
-    s+=p[0]==='b'?v:-v;
-  }
-  return s;
-}
-
-function getAllMoves(side){
-  const moves=[];
-  for(let r=0;r<8;r++) for(let c=0;c<8;c++){
-    const p=chessBoard[r][c];
-    if(p&&p[0]===side) getValidMoves(r,c).forEach(m=>moves.push([r,c,m[0],m[1]]));
-  }
-  return moves;
-}
-
-function getValidMoves(r,c){
-  const p=chessBoard[r][c]; if(!p) return [];
-  const side=p[0], type=p[1], moves=[];
-  const inBounds=(r,c)=>r>=0&&r<8&&c>=0&&c<8;
-  const enemy=(r,c)=>inBounds(r,c)&&chessBoard[r][c]&&chessBoard[r][c][0]!==side;
-  const empty=(r,c)=>inBounds(r,c)&&!chessBoard[r][c];
-  const canGo=(r,c)=>inBounds(r,c)&&(!chessBoard[r][c]||chessBoard[r][c][0]!==side);
-
-  const slide=(dirs)=>{ dirs.forEach(([dr,dc])=>{ let nr=r+dr,nc=c+dc; while(inBounds(nr,nc)){ if(chessBoard[nr][nc]){ if(chessBoard[nr][nc][0]!==side) moves.push([nr,nc]); break; } moves.push([nr,nc]); nr+=dr; nc+=dc; } }); };
-
-  if(type==='P'){
-    const dir=side==='w'?-1:1, start=side==='w'?6:1;
-    if(empty(r+dir,c)){ moves.push([r+dir,c]); if(r===start&&empty(r+2*dir,c)) moves.push([r+2*dir,c]); }
-    if(enemy(r+dir,c-1)) moves.push([r+dir,c-1]);
-    if(enemy(r+dir,c+1)) moves.push([r+dir,c+1]);
-  }
-  if(type==='N'){ [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]].forEach(([dr,dc])=>{ if(canGo(r+dr,c+dc)) moves.push([r+dr,c+dc]); }); }
-  if(type==='B') slide([[-1,-1],[-1,1],[1,-1],[1,1]]);
-  if(type==='R') slide([[-1,0],[1,0],[0,-1],[0,1]]);
-  if(type==='Q') slide([[-1,-1],[-1,1],[1,-1],[1,1],[-1,0],[1,0],[0,-1],[0,1]]);
-  if(type==='K'){ [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]].forEach(([dr,dc])=>{ if(canGo(r+dr,c+dc)) moves.push([r+dr,c+dc]); }); }
-  return moves;
-}
-
-function isInCheck(side){
-  let kr,kc;
-  for(let r=0;r<8;r++) for(let c=0;c<8;c++) if(chessBoard[r][c]===(side+'K')){ kr=r; kc=c; }
-  const opp=side==='w'?'b':'w';
-  for(let r=0;r<8;r++) for(let c=0;c<8;c++){
-    const p=chessBoard[r][c];
-    if(p&&p[0]===opp) if(getValidMoves(r,c).some(m=>m[0]===kr&&m[1]===kc)) return true;
-  }
-  return false;
-}
-function isCheckmate(side){ return isInCheck(side)&&getAllMoves(side).length===0; }
-function isStalemate(side){ return !isInCheck(side)&&getAllMoves(side).length===0; }
 
 // ══════════════════════════════════════
 //  POMODORO TIMER
@@ -1612,7 +1473,7 @@ function pomoStart(){
   pomoInterval=setInterval(()=>{
     if(pomoLeft<=0){ clearInterval(pomoInterval); pomoRunning=false; $('pomo-start-btn').textContent='▶ Start';
       if(pomoMode==='work'){ pomoSession++; $('pomo-session').textContent=pomoSession; }
-      showToast(pomoMode==='work'?'🍅 Pomodoro done! Take a break.':'☕ Break over! Time to focus.','green'); return; }
+      playBeep('done'); const pomoLabel=pomoMode==='work'?'🍅 Pomodoro Done':'☕ Break Over'; sendTimerNotif(pomoLabel); showToast(pomoMode==='work'?'🍅 Pomodoro done! Take a break.':'☕ Break over! Time to focus.','green'); return; }
     pomoLeft--; updatePomoDisplay();
   },1000);
 }
@@ -1628,7 +1489,7 @@ function swStartStop(){
   if(swRunning){ clearInterval(swInterval); swElapsed+=Date.now()-swStart; swRunning=false; $('sw-btn').textContent='▶ Start'; }
   else { swStart=Date.now(); swRunning=true; $('sw-btn').textContent='⏸ Pause'; swInterval=setInterval(()=>{ $('sw-display').textContent=swFmt(swElapsed+(Date.now()-swStart)); },50); }
 }
-function swLap(){ if(!swRunning&&swElapsed===0) return; const t=swElapsed+(swRunning?Date.now()-swStart:0); swLaps.push(t); renderLaps(); }
+function swLap(){ if(!swRunning&&swElapsed===0) return; playBeep('lap'); const t=swElapsed+(swRunning?Date.now()-swStart:0); swLaps.push(t); renderLaps(); }
 function renderLaps(){ $('sw-laps').innerHTML=swLaps.map((t,i)=>`<div class="sw-lap-item"><span>Lap ${i+1}</span><span>${swFmt(t)}</span><span>${i>0?swFmt(t-swLaps[i-1]):'—'}</span></div>`).reverse().join(''); }
 function swReset(){ clearInterval(swInterval); swRunning=false; swElapsed=0; swLaps=[]; $('sw-display').textContent='00:00.00'; $('sw-btn').textContent='▶ Start'; $('sw-laps').innerHTML=''; }
 
@@ -1647,7 +1508,7 @@ function cdStartStop(){
     }
     $('cd-done').style.display='none'; cdRunning=true; $('cd-btn').textContent='⏸ Pause';
     cdInterval=setInterval(()=>{
-      if(cdLeft<=0){ clearInterval(cdInterval); cdRunning=false; $('cd-btn').textContent='▶ Start'; $('cd-done').style.display='block'; showToast("⏰ Time's up!",'green'); return; }
+      if(cdLeft<=0){ clearInterval(cdInterval); cdRunning=false; $('cd-btn').textContent='▶ Start'; $('cd-done').style.display='block'; playBeep('done'); sendTimerNotif("Time's Up"); showToast("⏰ Time's up!",'green'); return; }
       cdLeft--; cdUpdateDisplay();
     },1000);
   }
@@ -1655,35 +1516,7 @@ function cdStartStop(){
 function cdReset(){ clearInterval(cdInterval); cdRunning=false; cdLeft=0; $('cd-btn').textContent='▶ Start'; $('cd-display').textContent='00:00'; $('cd-done').style.display='none'; $('cd-h').value=0; $('cd-m').value=5; $('cd-s').value=0; cdLeft=300; cdUpdateDisplay(); }
 
 // ── GOOGLE SIGN-IN ──
-function initGoogleSignIn() {
-  if(GOOGLE_CLIENT_ID==='YOUR_GOOGLE_CLIENT_ID') return;
-  try { google.accounts.id.initialize({ client_id:GOOGLE_CLIENT_ID, callback:handleGoogleCredential, auto_select:false }); } catch(e){}
-}
-function handleGoogleSignIn() {
-  if(GOOGLE_CLIENT_ID==='YOUR_GOOGLE_CLIENT_ID') {
-    $('setup-notice').style.display='block';
-    $('setup-notice').scrollIntoView({behavior:'smooth',block:'nearest'}); return;
-  }
-  try { google.accounts.id.prompt(); } catch(e) { showToast('⚠️ Google Sign-In unavailable.','red'); }
-}
-function parseJwt(token) {
-  try {
-    const b64=token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
-    return JSON.parse(decodeURIComponent(atob(b64).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));
-  } catch(e){return null;}
-}
-function handleGoogleCredential(response) {
-  const p=parseJwt(response.credential);
-  if(!p){showToast('⚠️ Google sign-in failed.','red');return;}
-  const id='g_'+p.sub, name=p.name||p.email.split('@')[0], picture=p.picture||'';
-  const users=getUsers();
-  users[id]={name, email:p.email, picture, googleAccount:true};
-  saveUsers(users);
-  currentUser=id;
-  localStorage.setItem('tmd_session',JSON.stringify({id,picture}));
-  loadTasks(); enterApp(name,picture);
-}
-
+// Google Sign-In removed — local accounts only
 // ── AUTH ──
 function switchTab(tab) {
   document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&tab==='signin')||(i===1&&tab==='signup')));
@@ -1692,6 +1525,20 @@ function switchTab(tab) {
 }
 function getUsers(){return JSON.parse(localStorage.getItem('tmd_users')||'{}');}
 function saveUsers(u){localStorage.setItem('tmd_users',JSON.stringify(u));}
+function checkUsernameAvail() {
+  const user = $('su-user').value.trim().toLowerCase();
+  const status = $('su-user-status');
+  if (!user) { status.textContent = ''; return; }
+  if (user.length < 3) { status.textContent = '⚠ min 3'; status.style.color = 'var(--accent3)'; return; }
+  const users = getUsers();
+  if (users[user]) {
+    status.textContent = '✗ taken';
+    status.style.color = 'var(--accent3)';
+  } else {
+    status.textContent = '✓ available';
+    status.style.color = 'var(--done)';
+  }
+}
 function signUp() {
   const name=$('su-name').value.trim(), user=$('su-user').value.trim().toLowerCase(), pass=$('su-pass').value, err=$('su-error');
   if(!name||!user||!pass){err.textContent='⚠️ All fields required.';err.style.display='block';return;}
@@ -1707,16 +1554,55 @@ function signIn() {
   if(!users[user]||users[user].pass!==pass){err.style.display='block';return;}
   err.style.display='none'; currentUser=user;
   localStorage.setItem('tmd_session',JSON.stringify({id:user,picture:''}));
+  addSavedAccount(user, users[user].name);
   loadTasks(); enterApp(users[user].name,'');
 }
 function logout() {
   saveTasks();
-  if(GOOGLE_CLIENT_ID!=='YOUR_GOOGLE_CLIENT_ID'){try{google.accounts.id.disableAutoSelect();}catch(e){}}
   currentUser=null; tasks=[]; localStorage.removeItem('tmd_session');
   $('auth-screen').classList.add('active'); $('app-screen').classList.remove('active');
   $('si-user').value=''; $('si-pass').value='';
   const av=$('g-avatar-img'); av.style.display='none'; av.src=''; $('status-dot').style.display='';
+  renderSavedAccounts();
   showToast('👋 Signed out.');
+}
+
+// ── SAVED ACCOUNTS ──
+function getSavedAccounts(){return JSON.parse(localStorage.getItem('tmd_saved_accounts')||'[]');}
+function setSavedAccounts(a){localStorage.setItem('tmd_saved_accounts',JSON.stringify(a));}
+function addSavedAccount(username, name) {
+  let saved=getSavedAccounts();
+  saved=saved.filter(a=>a.username!==username); // remove old entry
+  saved.unshift({username,name}); // add to top
+  if(saved.length>5) saved=saved.slice(0,5); // keep max 5
+  setSavedAccounts(saved);
+}
+function removeSavedAccount(username, e) {
+  e.stopPropagation();
+  let saved=getSavedAccounts().filter(a=>a.username!==username);
+  setSavedAccounts(saved); renderSavedAccounts();
+}
+function quickSignIn(username) {
+  switchTab('signin');
+  $('si-user').value = username;
+  $('si-pass').value = '';
+  $('si-pass').focus();
+}
+function renderSavedAccounts() {
+  const saved=getSavedAccounts();
+  const section=$('saved-accounts-section');
+  if(!saved.length){section.style.display='none';return;}
+  section.style.display='block';
+  const list=$('saved-account-list');
+  list.innerHTML=saved.map(a=>`
+    <div class="saved-account-chip" onclick="quickSignIn('${a.username}')">
+      <div class="saved-account-avatar">${(a.name||a.username).charAt(0).toUpperCase()}</div>
+      <div class="saved-account-info">
+        <div class="saved-account-name">${esc(a.name||a.username)}</div>
+        <div class="saved-account-user">@${esc(a.username)}</div>
+      </div>
+      <button class="saved-account-remove" title="Remove" onclick="removeSavedAccount('${a.username}',event)">×</button>
+    </div>`).join('');
 }
 function enterApp(name,picture) {
   $('auth-screen').classList.remove('active'); $('app-screen').classList.add('active');
@@ -2021,10 +1907,134 @@ document.addEventListener('fullscreenchange', () => {
   if (focusActive && !document.fullscreenElement) showFocusWarning();
 });
 
+
+// ══════════════════════════════════════
+//  NOTIFICATION SYSTEM
+// ══════════════════════════════════════
+let notifPermission = Notification.permission;
+let notifCheckInterval = null;
+let firedNotifs = new Set(JSON.parse(localStorage.getItem('tmd_fired_notifs') || '[]'));
+
+function saveFiredNotifs() {
+  // Keep only today's fired notifs to avoid unbounded growth
+  localStorage.setItem('tmd_fired_notifs', JSON.stringify([...firedNotifs]));
+}
+
+function updateBell() {
+  const bell = $('notif-bell');
+  if (!bell) return;
+  if (Notification.permission === 'granted') {
+    bell.textContent = '🔔';
+    bell.title = 'Notifications enabled';
+    bell.style.color = 'var(--accent)';
+  } else if (Notification.permission === 'denied') {
+    bell.textContent = '🔕';
+    bell.title = 'Notifications blocked — enable in browser settings';
+    bell.style.color = 'var(--muted)';
+  } else {
+    bell.textContent = '🔔';
+    bell.title = 'Click to enable notifications';
+    bell.style.color = 'var(--muted)';
+  }
+}
+
+function requestNotifPermission() {
+  if (Notification.permission === 'granted') {
+    showToast('🔔 Notifications are already enabled!', 'green'); return;
+  }
+  if (Notification.permission === 'denied') {
+    showToast('🔕 Notifications blocked. Enable them in your browser settings.', 'red'); return;
+  }
+  Notification.requestPermission().then(p => {
+    notifPermission = p;
+    updateBell();
+    if (p === 'granted') {
+      showToast('🔔 Notifications enabled!', 'green');
+      startNotifChecker();
+      // Send a test notification
+      sendNotif('🔔 Notifications On', 'You will be notified when tasks are due and timers finish.', '');
+    } else {
+      showToast('⚠️ Notifications permission denied.', 'red');
+    }
+  });
+}
+
+function sendNotif(title, body, tag) {
+  if (Notification.permission !== 'granted') return;
+  try {
+    const n = new Notification(title, {
+      body,
+      tag: tag || title,
+      icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="32" fill="%231a1a2e"/><text y="44" x="32" text-anchor="middle" font-size="36">⏰</text></svg>',
+      badge: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="32" fill="%234da6ff"/></svg>',
+      requireInteraction: false,
+    });
+    n.onclick = () => { window.focus(); n.close(); };
+    setTimeout(() => n.close(), 8000);
+  } catch(e) {}
+}
+
+function checkTaskNotifs() {
+  if (Notification.permission !== 'granted') return;
+  if (!currentUser) return;
+  const now = new Date();
+  const todayStr = now.toISOString().slice(0, 10);
+  const hh = String(now.getHours()).padStart(2, '0');
+  const mm = String(now.getMinutes()).padStart(2, '0');
+  const nowTime = hh + ':' + mm;
+
+  tasks.forEach(t => {
+    if (t.done || !t.date || !t.time) return;
+    if (t.date !== todayStr) return;
+    const key = 'task_' + t.id + '_' + t.date + '_' + t.time;
+
+    // Fire at exact minute
+    if (t.time === nowTime && !firedNotifs.has(key)) {
+      firedNotifs.add(key); saveFiredNotifs();
+      sendNotif(
+        '⏰ Task Due: ' + t.title,
+        (t.desc ? t.desc + '\n' : '') + '📅 Due at ' + t.time + (t.cat ? ' · ' + t.cat : ''),
+        key
+      );
+      playBeep('done');
+      showToast('⏰ Task due: ' + t.title, 'green');
+    }
+
+    // 5-min warning
+    const [th, tm] = t.time.split(':').map(Number);
+    const taskMinutes = th * 60 + tm;
+    const nowMinutes = now.getHours() * 60 + now.getMinutes();
+    const warnKey = 'warn5_' + key;
+    if (taskMinutes - nowMinutes === 5 && !firedNotifs.has(warnKey)) {
+      firedNotifs.add(warnKey); saveFiredNotifs();
+      sendNotif(
+        '⏳ 5 min until: ' + t.title,
+        'Your task is due at ' + t.time + (t.cat ? ' (' + t.cat + ')' : ''),
+        warnKey
+      );
+    }
+  });
+}
+
+function startNotifChecker() {
+  if (notifCheckInterval) return;
+  // Clear yesterday's fired notifs
+  const todayStr = new Date().toISOString().slice(0, 10);
+  firedNotifs = new Set([...firedNotifs].filter(k => k.includes(todayStr)));
+  saveFiredNotifs();
+  notifCheckInterval = setInterval(checkTaskNotifs, 30000); // check every 30s
+  checkTaskNotifs(); // immediate check
+}
+
+// Called from timer completions
+function sendTimerNotif(label) {
+  sendNotif('⏰ ' + label, 'Your timer has finished!', 'timer_' + Date.now());
+}
+
 // ── INIT ──
 (function init(){
   $('task-date').value=today();
-  window.addEventListener('load',initGoogleSignIn);
+  renderSavedAccounts();
 
   const sessionRaw=localStorage.getItem('tmd_session');
   if(sessionRaw){
@@ -2118,5 +2128,6 @@ document.addEventListener('fullscreenchange', () => {
     text-transform:uppercase;
   ">Dragon Company</span>
 </footer>
+
 </body>
 </html>
